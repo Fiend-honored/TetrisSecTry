@@ -36,6 +36,9 @@ namespace TetrisSecTry
                 case ConsoleKey.DownArrow:
                     currentFigure.TryMove(Directions.DOWN);
                     break;
+                case ConsoleKey.Spacebar:
+                    currentFigure.TryRotate();
+                    break;
                 default:
                     break;
             }

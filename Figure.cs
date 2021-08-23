@@ -29,6 +29,15 @@ namespace TetrisSecTry
             }
             Draw();
         }
+        internal void TryRotate()
+        {
+            Hide();
+            var clone = Clone();
+            Rotate(clone);
+            if (VerifiPosition(clone))
+                points = clone;
+            Draw();
+        }
 
         private bool VerifiPosition(Point[] pList)
         {
@@ -58,6 +67,8 @@ namespace TetrisSecTry
             return newPoints;
         }
 
+
+
         //public void Move(Directions dir)
         //{
         //    Hide();
@@ -76,7 +87,7 @@ namespace TetrisSecTry
             }
         }
 
-        public abstract void Rotate();
+        public abstract void Rotate(Point[] pList);
 
 
     }
