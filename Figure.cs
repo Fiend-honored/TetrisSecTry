@@ -43,7 +43,7 @@ namespace TetrisSecTry
         {
             foreach(var p in pList)
             {
-                if (p.x < 0 || p.y < 0 || p.x >= 40 || p.y >= 30)
+                if (p.X < 0 || p.Y < 0 || p.X >= Field.Width || p.Y >= Field.Height)
                     return false;
             }
             return true;
@@ -66,18 +66,6 @@ namespace TetrisSecTry
             }
             return newPoints;
         }
-
-
-
-        //public void Move(Directions dir)
-        //{
-        //    Hide();
-        //    foreach(Point p in points)
-        //    {                
-        //        p.Move(dir);
-        //    }
-        //    Draw();
-        //}
 
         public void Hide()
         {

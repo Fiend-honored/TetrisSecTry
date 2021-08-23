@@ -6,28 +6,28 @@ namespace TetrisSecTry
 {
     class Point
     {
-        public int x, y;
-        public char c;
-        private Point point;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public char C { get; set; }
 
         public Point(int a, int b, char sym)
         {
-            x = a;
-            y = b;
-            c = sym;
+            X = a;
+            Y = b;
+            C = sym;
         }
 
         public Point(Point point)
         {
-            x = point.x;
-            y = point.y;
-            c = point.c;
+            X = point.X;
+            Y = point.Y;
+            C = point.C;
         }
 
         public void Draw()
         {
-            Console.SetCursorPosition(x, y);
-            Console.Write(c);
+            Console.SetCursorPosition(X, Y);
+            Console.Write(C);
             Console.SetCursorPosition(0, 0);
         }
 
@@ -37,20 +37,20 @@ namespace TetrisSecTry
             switch (dir)
             {
                 case Directions.DOWN:
-                    y++;
+                    Y++;
                     break;
                 case Directions.LEFT:
-                    x--;
+                    X--;
                     break;
                 case Directions.RIGHT:
-                    x++;
+                    X++;
                     break;
             }
         }
 
         internal void Hide()
         {
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(X, Y);
             Console.Write(" ");
         }
     }
