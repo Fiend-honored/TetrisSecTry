@@ -20,8 +20,8 @@ namespace TetrisSecTry
             set
             {
                 _width = value;
-                Console.SetWindowSize(_width, _height);
-                Console.SetBufferSize(_width, _height);
+                Console.SetWindowSize(_width, Field.Height);
+                Console.SetBufferSize(_width, Field.Height);
             }
         }
         public static int Height
@@ -34,8 +34,8 @@ namespace TetrisSecTry
             set
             {
                 _height = value;
-                Console.SetWindowSize(_width, _height);
-                Console.SetBufferSize(_width, _height);
+                Console.SetWindowSize(value, Field.Height);
+                Console.SetBufferSize(value, Field.Height);
             }
         }
 
