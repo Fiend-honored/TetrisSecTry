@@ -8,7 +8,7 @@ namespace TetrisSecTry
         static void Main(string[] args)
         {
             Console.SetWindowSize(Field.Width, Field.Height);
-            Console.SetBufferSize(Field.Width, Field.Height);
+            Console.SetBufferSize(Field.Width, Field.Height);           
 
             FigureGenerator generator = new FigureGenerator(20, 0, '#');
             Figure currentFigure = generator.GetNewFigure();

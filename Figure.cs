@@ -8,7 +8,7 @@ namespace TetrisSecTry
     {
         const int LENGTH = 4;
 
-        protected Point[] points = new Point[LENGTH];
+        public Point[] points = new Point[LENGTH];
 
         public void Draw()
         {
@@ -18,15 +18,14 @@ namespace TetrisSecTry
             }
         }
 
-        internal void TryMove(Directions dir)
+        internal Result TryMove(Directions dir)
         {
             Hide();
             var clone = Clone();
             Move(clone, dir);
-            if (VerifiPosition(clone))
-            {
-                points = clone;
-            }
+
+            var result = VerifiPosition(clone);
+            if ()
             Draw();
         }
         internal void TryRotate()
@@ -39,14 +38,20 @@ namespace TetrisSecTry
             Draw();
         }
 
-        private bool VerifiPosition(Point[] pList)
+        private Result VerifiPosition(Point[] pList)
         {
             foreach(var p in pList)
             {
-                if (p.X < 0 || p.Y < 0 || p.X >= Field.Width || p.Y >= Field.Height)
-                    return false;
+                if (p.Y >= Field.Height)
+                    return Result.DOWN_BORDER_STRIKE;
+
+                if (p.X >= Field.Width || p.X < 0 || p.Y < 0)
+                    return Result.BORDER_STRIKE;
+
+                if (Field.CheckStrike(p))
+                    return Result.HEAP_STRIKE;                
             }
-            return true;
+            return Result.SUCCESS;
         }
 
         private void Move(Point[] pList, Directions dir)
