@@ -18,30 +18,37 @@ namespace TetrisSecTry
                 if (Console.KeyAvailable)
                 {
                     var pressKey = Console.ReadKey();
-                    MoveCurrentFigure(currentFigure, pressKey);
+                    var result = MoveCurrentFigure(currentFigure, pressKey.Key);
+                    ProcessResult(result, generator, ref currentFigure);                    
                 }
             }
         }
 
-        private static void MoveCurrentFigure(Figure currentFigure, ConsoleKeyInfo pressKey)
+        private static bool ProcessResult(Result result, FigureGenerator generator, ref Figure currentFigure)
         {
-            switch (pressKey.Key)
+            if(result == Result.DOWN_BORDER_STRIKE || result == Result.HEAP_STRIKE)
+            {
+                Field.AddFigure(currentFigure);
+                currentFigure = generator.GetNewFigure();
+                return true;
+            }
+            return false;
+        }
+
+        private static Result MoveCurrentFigure(Figure fig, ConsoleKey pressKey)
+        {
+            switch (pressKey)
             {
                 case ConsoleKey.LeftArrow:
-                    currentFigure.TryMove(Directions.LEFT);
-                    break;
+                    return fig.TryMove(Directions.LEFT);
                 case ConsoleKey.RightArrow:
-                    currentFigure.TryMove(Directions.RIGHT);
-                    break;
+                    return fig.TryMove(Directions.RIGHT);
                 case ConsoleKey.DownArrow:
-                    currentFigure.TryMove(Directions.DOWN);
-                    break;
+                    return fig.TryMove(Directions.DOWN);
                 case ConsoleKey.Spacebar:
-                    currentFigure.TryRotate();
-                    break;
-                default:
-                    break;
+                    return fig.TryRotate();                
             }
+            return Result.SUCCESS;
         }
     }
 }

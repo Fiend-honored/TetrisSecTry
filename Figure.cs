@@ -8,11 +8,11 @@ namespace TetrisSecTry
     {
         const int LENGTH = 4;
 
-        public Point[] points = new Point[LENGTH];
+        public Point[] Points = new Point[LENGTH];
 
         public void Draw()
         {
-            foreach (Point p in points)
+            foreach (Point p in Points)
             {
                 p.Draw();
             }
@@ -21,26 +21,35 @@ namespace TetrisSecTry
         internal Result TryMove(Directions dir)
         {
             Hide();
+
             var clone = Clone();
+
             Move(clone, dir);
 
             var result = VerifiPosition(clone);
-            if ()
+            if (result == Result.SUCCESS)
+                Points = clone;
+
             Draw();
+
+            return result;
         }
-        internal void TryRotate()
+
+        internal Result TryRotate()
         {
             Hide();
             var clone = Clone();
             Rotate(clone);
-            if (VerifiPosition(clone))
-                points = clone;
+            var result = VerifiPosition(clone);
+            if (result == Result.SUCCESS)
+                Points = clone;
             Draw();
+            return result;
         }
 
         private Result VerifiPosition(Point[] pList)
         {
-            foreach(var p in pList)
+            foreach (var p in pList)
             {
                 if (p.Y >= Field.Height)
                     return Result.DOWN_BORDER_STRIKE;
@@ -49,14 +58,14 @@ namespace TetrisSecTry
                     return Result.BORDER_STRIKE;
 
                 if (Field.CheckStrike(p))
-                    return Result.HEAP_STRIKE;                
+                    return Result.HEAP_STRIKE;
             }
             return Result.SUCCESS;
         }
 
         private void Move(Point[] pList, Directions dir)
         {
-            foreach(var p in pList)
+            foreach (var p in pList)
             {
                 p.Move(dir);
             }
@@ -65,20 +74,22 @@ namespace TetrisSecTry
         private Point[] Clone()
         {
             var newPoints = new Point[LENGTH];
-            for(int i = 0; i < LENGTH; i++)
+            for (int i = 0; i < LENGTH; i++)
             {
-                newPoints[i] = new Point(points[i]);
+                newPoints[i] = new Point(Points[i]);
             }
             return newPoints;
         }
 
         public void Hide()
         {
-            foreach(Point p in points)
+            foreach (Point p in Points)
             {
                 p.Hide();
             }
+            
         }
+
 
         public abstract void Rotate(Point[] pList);
 

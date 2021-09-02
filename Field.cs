@@ -52,7 +52,7 @@ namespace TetrisSecTry
 
         public static void AddFigure(Figure fig)
         {
-            foreach(var p in fig.points)
+            foreach(var p in fig.Points)
             {
                 _heap[p.Y][p.X] = true;
             }
@@ -61,6 +61,32 @@ namespace TetrisSecTry
         public static bool CheckStrike(Point p)
         {
             return _heap[p.Y][p.X];
+        }
+
+        public static int[][] CheckFullLine()
+        {
+            int[][] checkFullLine;
+            var indexFullLine = 0;
+            for(int i = 0; i < Height; i++)
+            {
+                indexFullLine = 0;
+                for (int j = 0; j < Width; j++)
+                {
+                    if (_heap[i][j] == true)
+                        indexFullLine++;
+                    if (indexFullLine == Width)
+                    {
+                        checkFullLine = new int[i][];
+                        for (int t = 0; t < Width; t++)
+                        {
+                            _heap[i][t] = false;
+                            checkFullLine[i] = new int[t];
+                        }
+                        return checkFullLine;
+                    }                    
+                }                
+            }
+            return null;
         }
 
     }
