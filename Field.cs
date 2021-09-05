@@ -6,8 +6,9 @@ namespace TetrisSecTry
 {
     class Field
     {
-        private static int _width = 40;
-        private static int _height = 30;
+        private static int _width = 20;
+        private static int _height = 20;
+
 
 
         public static int Width
@@ -40,7 +41,8 @@ namespace TetrisSecTry
         }
 
         private static bool[][] _heap;
-        
+        public static Point[] Line = new Point[Width];
+
         static Field()
         {
             _heap = new bool[Height][];
@@ -52,7 +54,7 @@ namespace TetrisSecTry
 
         public static void AddFigure(Figure fig)
         {
-            foreach(var p in fig.Points)
+            foreach (var p in fig.Points)
             {
                 _heap[p.Y][p.X] = true;
             }
@@ -63,30 +65,54 @@ namespace TetrisSecTry
             return _heap[p.Y][p.X];
         }
 
-        public static int[][] CheckFullLine()
+        public static void TryDeleteLine()
         {
-            int[][] checkFullLine;
-            var indexFullLine = 0;
-            for(int i = 0; i < Height; i++)
+            for (int i = 0; i < Height; i++)
             {
-                indexFullLine = 0;
+                var counter = 0;
                 for (int j = 0; j < Width; j++)
                 {
-                    if (_heap[i][j] == true)
-                        indexFullLine++;
-                    if (indexFullLine == Width)
+                    if (_heap[i][j])
+                        counter++;
+                    if (counter == Width)
                     {
-                        checkFullLine = new int[i][];
-                        for (int t = 0; t < Width; t++)
-                        {
-                            _heap[i][t] = false;
-                            checkFullLine[i] = new int[t];
-                        }
-                        return checkFullLine;
-                    }                    
-                }                
+                        DeleteLine(i);
+                        Redraw();
+                    }
+                }
             }
-            return null;
+        }
+
+        private static void Redraw()
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                for (int i = 0; i < Width; i++)
+                {
+                    if (_heap[j][i])
+                        Drawer.DrawPoint(i, j);
+                    else
+                        Drawer.HidePoint(i, j);
+                }
+            }
+        }
+
+        private static void DeleteLine(int line)
+        {
+            for (int j = line; j >= 0; j--)
+            {
+                for (int i = 0; i < Width; i++)
+                {
+                    if (j == 0)
+                    {
+                        _heap[j][i] = false;
+                    }
+                    else
+                    {
+                        _heap[j][i] = _heap[j - 1][i];
+                    }
+                }
+            }
         }
 
     }

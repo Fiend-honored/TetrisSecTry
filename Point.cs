@@ -17,6 +17,12 @@ namespace TetrisSecTry
             C = sym;
         }
 
+        public Point(int a, int b)
+        {
+            X = a;
+            Y = b;
+        }
+
         public Point(Point point)
         {
             X = point.X;
