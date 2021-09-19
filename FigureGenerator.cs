@@ -18,13 +18,17 @@ namespace TetrisSecTry
 
         public Figure GetNewFigure()
         {
-            if(_rand.Next(0,2) == 0)
+            int random = _rand.Next(0, 2);
+            if (random == 0)
             {
                 return new Square(X, Y, C);
-            } else
+            }
+            if (random == 1)
             {
                 return new Stick(X, Y, C);
             }
+            else
+                return new FigureL(X, Y, C);
         }
     }
 }

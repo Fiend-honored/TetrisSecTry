@@ -20,36 +20,53 @@ namespace TetrisSecTry
 
         internal Result TryMove(Directions dir)
         {
-            Hide();
+            Hide();                   
 
-            var clone = Clone();
+            Move(dir);
 
-            Move(clone, dir);
-
-            var result = VerifiPosition(clone);
-            if (result == Result.SUCCESS)
-                Points = clone;
+            var result = VerifiPosition();
+            if (result != Result.SUCCESS)
+                Move(Reverse(dir));
 
             Draw();
 
             return result;
+        }
+
+        private Directions Reverse(Directions dir)
+        {
+            switch (dir)
+            {
+                case Directions.LEFT:
+                    return Directions.RIGHT;
+                case Directions.RIGHT:
+                    return Directions.LEFT;
+                case Directions.DOWN:
+                    return Directions.UP;
+                case Directions.UP:
+                    return Directions.DOWN;
+            }
+            return dir;
         }
 
         internal Result TryRotate()
         {
-            Hide();
-            var clone = Clone();
-            Rotate(clone);
-            var result = VerifiPosition(clone);
-            if (result == Result.SUCCESS)
-                Points = clone;
+            Hide();            
+            Rotate();
+            var result = VerifiPosition();
+            if (result != Result.SUCCESS)
+                while(result != Result.SUCCESS)
+                {
+                    Rotate();
+                    result = VerifiPosition();
+                }                
             Draw();
             return result;
         }
 
-        private Result VerifiPosition(Point[] pList)
+        private Result VerifiPosition()
         {
-            foreach (var p in pList)
+            foreach (var p in Points)
             {
                 if (p.Y >= Field.Height)
                     return Result.DOWN_BORDER_STRIKE;
@@ -63,12 +80,17 @@ namespace TetrisSecTry
             return Result.SUCCESS;
         }
 
-        private void Move(Point[] pList, Directions dir)
+        private void Move(Directions dir)
         {
-            foreach (var p in pList)
+            foreach (var p in Points)
             {
                 p.Move(dir);
             }
+        }
+
+        internal bool IsOnTop()
+        {
+            return Points[0].Y == 0;
         }
 
         private Point[] Clone()
@@ -91,7 +113,7 @@ namespace TetrisSecTry
         }
 
 
-        public abstract void Rotate(Point[] pList);
+        public abstract void Rotate();
 
 
     }

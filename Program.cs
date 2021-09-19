@@ -6,23 +6,32 @@ namespace TetrisSecTry
 {
     class Program
     {
-        private static System.Timers.Timer _timer;
+        const int TIMER_INTERVAL = 500;
+        static System.Timers.Timer timer;
+        private static Object _lockObject = new Object();
+
+        static Figure currentFigure;
+        static FigureGenerator generator;
+
         static void Main(string[] args)
         {
             Console.SetWindowSize(Field.Width, Field.Height);
             Console.SetBufferSize(Field.Width, Field.Height);  
 
-            FigureGenerator generator = new FigureGenerator(Field.Width / 2, 0, Drawer.DEFAULT_SYMBOL);
-            Figure currentFigure = generator.GetNewFigure();
+            generator = new FigureGenerator(Field.Width / 2, 0, Drawer.DEFAULT_SYMBOL);
+            currentFigure = generator.GetNewFigure();
+            SetTimer();
 
             while (true)
             {                
                 if (Console.KeyAvailable)
                 {
-                    SetTimer();
+                    
                     var pressKey = Console.ReadKey();
+                    Monitor.Enter(_lockObject);
                     var result = MoveCurrentFigure(currentFigure, pressKey.Key);                    
                     ProcessResult(result, generator, ref currentFigure);
+                    Monitor.Exit(_lockObject);
                 }
             }
         }
@@ -33,16 +42,33 @@ namespace TetrisSecTry
             {
                 Field.AddFigure(currentFigure);
                 Field.TryDeleteLine();
-                currentFigure = generator.GetNewFigure();
-                return true;
+                if (currentFigure.IsOnTop())
+                {
+                    WriteGameOver();
+                    timer.Elapsed -= OnTimedEvent;
+                    return true;
+                }
+                else
+                {
+                    currentFigure = generator.GetNewFigure();
+                    return false;
+                }                     
             }
             return false;
+        }
+
+        private static void WriteGameOver()
+        {
+            Console.SetCursorPosition(Field.Width / 2 - 8, Field.Height / 2);
+            Console.Write("G A M E   O V E R");
         }
 
         private static Result MoveCurrentFigure(Figure fig, ConsoleKey pressKey)
         {
             switch (pressKey)
             {
+                case ConsoleKey.DownArrow:
+                    return fig.TryMove(Directions.DOWN);
                 case ConsoleKey.LeftArrow:
                     return fig.TryMove(Directions.LEFT);
                 case ConsoleKey.RightArrow:
@@ -55,15 +81,18 @@ namespace TetrisSecTry
 
         private static void SetTimer()
         {
-            _timer = new System.Timers.Timer(1500);
-            _timer.Elapsed += OnTimedEvent;
-            _timer.AutoReset = true;
-            _timer.Enabled = true;
+            timer = new System.Timers.Timer(TIMER_INTERVAL);
+            timer.Elapsed += OnTimedEvent;
+            timer.AutoReset = true;
+            timer.Enabled = true;
         }
 
-        private static void OnTimedEvent(Object source, ElapsedEventArgs e, Figure fig)
+        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            fig.TryMove(Directions.DOWN);
+            Monitor.Enter(_lockObject);
+            var result = currentFigure.TryMove(Directions.DOWN);
+            ProcessResult(result, generator, ref currentFigure);
+            Monitor.Exit(_lockObject);
         }
 
     }

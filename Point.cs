@@ -51,6 +51,9 @@ namespace TetrisSecTry
                 case Directions.RIGHT:
                     X++;
                     break;
+                case Directions.UP:
+                    Y--;
+                    break;
             }
         }
 

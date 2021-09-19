@@ -4,8 +4,10 @@ using System.Text;
 
 namespace TetrisSecTry
 {
-    enum Directions : byte
+    interface IDrawer
     {
-        LEFT, RIGHT, DOWN, UP
+        void DrawPoint(int x, int y);
+
+        void HidePoint(int x, int y);
     }
 }
